@@ -9,11 +9,11 @@ The app provides an intuitive interface to help users stay organized and track c
 5.Persistent storage using SharedPreferences
 6.Clean Material Design UI
 
-<img width="800" height="1000" alt="Screenshot_20260228_153925" src="https://github.com/user-attachments/assets/eaa4ee27-8175-4025-bce6-12107d110c64" />
-
-<img width="400" height="827" alt="Screenshot 2026-02-28 153701" src="https://github.com/user-attachments/assets/38ffd7e9-4d05-418f-9f57-9db6a5c3f098" />
-
-<img width="800" height="1000" alt="Screenshot_20260228_153903" src="https://github.com/user-attachments/assets/21f94102-f348-4ade-a995-b75fed807167" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/eaa4ee27-8175-4025-bce6-12107d110c64" width="250" />
+  <img src="https://github.com/user-attachments/assets/38ffd7e9-4d05-418f-9f57-9db6a5c3f098" width="250" />
+  <img src="https://github.com/user-attachments/assets/21f94102-f348-4ade-a995-b75fed807167" width="250" />
+</p>
 
 Design Choices
 1️) Material Design Principles
