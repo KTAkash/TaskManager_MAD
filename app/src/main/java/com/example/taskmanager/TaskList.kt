@@ -40,16 +40,15 @@ fun TaskList(
         ) {
             items(
                 items = tasks,
-                key = { it.id }
+                key = { it.id } // Use task ID as key for stable item identity
             ) { task ->
                 TaskItem(
                     task = task,
                     onToggleCompleted = { onToggleCompleted(task.id) },
                     onDelete = { onDelete(task.id) },
                     onEdit = { onEdit(task.id) }
-
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp)) // Space between tasks
             }
         }
     }
@@ -61,11 +60,10 @@ fun TaskItem(
     onToggleCompleted: () -> Unit,
     onDelete: () -> Unit,
     onEdit: () -> Unit
-
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp) // Slight elevation for card
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -74,14 +72,14 @@ fun TaskItem(
             ) {
                 Checkbox(
                     checked = task.isCompleted,
-                    onCheckedChange = { onToggleCompleted() }
+                    onCheckedChange = { onToggleCompleted() } // Toggle task completion
                 )
                 Text(
                     text = task.title,
                     style = MaterialTheme.typography.titleMedium,
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
                     color = if (task.isCompleted) Color.Gray else MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f) // Take remaining space
                 )
                 IconButton(onClick = onDelete) {
                     Icon(
@@ -105,7 +103,7 @@ fun TaskItem(
                     fontStyle = if (task.isCompleted) FontStyle.Italic else FontStyle.Normal,
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
                     color = if (task.isCompleted) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(start = 32.dp, top = 4.dp)
+                    modifier = Modifier.padding(start = 32.dp, top = 4.dp) // Indent description
                 )
             }
         }

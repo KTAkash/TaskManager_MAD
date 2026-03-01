@@ -8,66 +8,75 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.core.view.WindowCompat
 
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Handle system UI insets properly (status bar/navigation bar)
+        // Allows drawing behind system bars (edge-to-edge UI)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
             MaterialTheme {
+
                 val navController = rememberNavController()
+
+                // ViewModel scoped to this Activity lifecycle
                 val viewModel: TaskViewModel by viewModels()
 
+                // Navigation graph configuration
                 NavHost(
                     navController = navController,
                     startDestination = "home"
                 ) {
+
+                    // Home screen route
                     composable("home") {
                         HomeScreen(
                             viewModel = viewModel,
-                            onAddTaskClick = { navController.navigate("add_task") },
+                            onAddTaskClick = {
+                                navController.navigate("add_task")
+                            },
                             onEditTaskClick = { taskId ->
                                 navController.navigate("add_task/$taskId")
                             }
                         )
                     }
 
+                    // Add Task route
                     composable("add_task") {
                         AddTaskScreen(
                             onSave = { title, description ->
                                 viewModel.addTask(title, description)
-                                navController.popBackStack()
+                                navController.popBackStack() // Return to Home
                             },
                             onBack = { navController.popBackStack() }
                         )
                     }
 
+                    // Edit Task route with argument
                     composable("add_task/{taskId}") { backStackEntry ->
-                        val taskId = backStackEntry.arguments?.getString("taskId")?.toLong()
-                        val task = taskId?.let { viewModel.getTaskById(it) }
+
+                        // Retrieve taskId from navigation arguments
+                        val taskId =
+                            backStackEntry.arguments?.getString("taskId")?.toLong()
+
+                        // Fetch task from ViewModel
+                        val task = taskId?.let {
+                            viewModel.getTaskById(it)
+                        }
 
                         AddTaskScreen(
                             task = task,
@@ -92,33 +101,38 @@ fun HomeScreen(
     viewModel: TaskViewModel,
     onAddTaskClick: () -> Unit,
     onEditTaskClick: (Long) -> Unit
-
 ) {
+
+    // Observe LiveData as Compose state for automatic recomposition
     val tasks by viewModel.tasks.observeAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { androidx.compose.material3.Text("Task Manager") },
-                colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+                title = { Text("Task Manager") },
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = Color.White
                 )
             )
         },
+
+        // Floating Action Button to add new tasks
         floatingActionButton = {
-            androidx.compose.material3.FloatingActionButton(
+            FloatingActionButton(
                 onClick = onAddTaskClick,
                 containerColor = MaterialTheme.colorScheme.secondary
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add task",
+                    contentDescription = "Add task", // Accessibility
                     tint = Color.White
                 )
             }
         }
     ) { innerPadding ->
+
+        // Task list content
         TaskList(
             tasks = tasks,
             onToggleCompleted = { viewModel.toggleCompleted(it) },

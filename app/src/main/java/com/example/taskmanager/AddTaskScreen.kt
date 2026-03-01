@@ -12,11 +12,12 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(
-    task: Task? = null,
+    task: Task? = null, // If task is provided → Edit mode, otherwise Add mode
     onSave: (String, String) -> Unit,
     onBack: () -> Unit
 ) {
 
+    // State holders preserve user input during recomposition
     var title by remember { mutableStateOf(task?.title ?: "") }
     var description by remember { mutableStateOf(task?.description ?: "") }
 
@@ -24,15 +25,14 @@ fun AddTaskScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        if (task == null) "Add Task" else "Edit Task"
-                    )
+                    // Dynamic title based on Add or Edit mode
+                    Text(if (task == null) "Add Task" else "Edit Task")
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back" // Accessibility support
                         )
                     }
                 },
@@ -77,12 +77,13 @@ fun AddTaskScreen(
 
             Button(
                 onClick = {
+                    // Basic input validation: prevent saving empty titles
                     if (title.isNotBlank()) {
                         onSave(title, description)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = title.isNotBlank()
+                enabled = title.isNotBlank() // Button disabled if title is empty
             ) {
                 Text(if (task == null) "Save Task" else "Update Task")
             }
